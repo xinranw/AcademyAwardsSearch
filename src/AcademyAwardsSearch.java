@@ -43,7 +43,6 @@ public class AcademyAwardsSearch {
 				inputString = getUserInput();
 				try{
 					userSelection = convertUserInputToInt(inputString, 3);
-					System.out.println(userSelection);
 					switch (userSelection) {
 						case -1:
 							quit();
