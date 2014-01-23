@@ -11,6 +11,11 @@ public class AcademyAwardsSearch {
 	private static File logFile;
 	private static AcademyAwards awardsDatabase;
 	private static boolean quit = false; 
+	private static final String[] HOME_SCREEN_CHOICES = new String[]{
+			 "1: Search for best picture award winner by year",
+			 "2: Search for best picture award nominees by year",
+			 "3: Search for actor/actress nominations by name",
+			 "Q: Quit"};
 	
 	public static final void main(String[] args) {
 		if (args.length <= 0 || args[0].equals("")){
@@ -29,12 +34,36 @@ public class AcademyAwardsSearch {
 			Nominee[] nominees = createNomineesFromDataFile(dataFileName);
 			awardsDatabase = new AcademyAwards();
 			awardsDatabase.addNominees(nominees);
+			String inputString;
+			int userSelection = 0;
 			
 			while(!quit){
-				welcomeScreen();
+				System.out.println("Welcome to the Oscars database!\n");
+				displayHomeScreen();
+				inputString = getUserInput();
+				try{
+					userSelection = convertUserInputToInt(inputString, 3);
+					System.out.println(userSelection);
+					switch (userSelection) {
+						case -1:
+							quit();
+							break;
+			            case 1:  
+			                break;
+			            case 2:  
+		                    break;
+			            case 3:  
+			            	break;
+			            default:
+			            	displayInvalidInputError(3);
+			            	break;
+					}
+				} catch (IllegalArgumentException e){
+					displayInvalidInputError(3);
+				}
+				
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error - data file could not opened. ");
 			System.out.println("Please check the file exists and this program has sufficient permissions.");
 			e.printStackTrace();
@@ -59,41 +88,9 @@ public class AcademyAwardsSearch {
 	    return nominees.toArray(new Nominee[0]);
 	}
 	
-	private static void welcomeScreen(){
-		int selection = 0;
-		String input;
-		Console console = System.console();
-		final int NUMBER_OF_OPTIONS = 3;
-		
-		while(selection == 0){
-			System.out.println("Welcome to the Oscars database!\n");
-			System.out.println("1. Search for best picture award winner by year");
-			System.out.println("2. Search for best picture award nominees by year");
-			System.out.println("3: Search for actor/actress nominations by name");
-			System.out.println("Q: Quit");
-			
-			input = parseString(console.readLine("> "));
-			if (input.equals("q")){
-				quit();
-				return;
-			}
-			try{
-				selection = parseUserSelection(input, NUMBER_OF_OPTIONS);
-			} catch (IllegalArgumentException e){
-				displayInvalidInputError(NUMBER_OF_OPTIONS);
-			}
-		}
-		
-		switch (selection){
-	        case 1:
-	        	break;
-	        case 2:
-	        	break;
-	        case 3:
-	        	break;
-	        default:
-	        	displayInvalidInputError(3);                       
-	        	break;
+	private static void displayHomeScreen(){
+		for (int i = 0; i < HOME_SCREEN_CHOICES.length; i++){
+			System.out.println(HOME_SCREEN_CHOICES[i]);
 		}
 	}
 	
@@ -104,7 +101,16 @@ public class AcademyAwardsSearch {
 		return parsedString;
 	}
 	
-	private static int parseUserSelection(String input, int numberOfOptions) throws IllegalArgumentException{
+	private static String getUserInput(){
+		Console console = System.console();
+		String input = parseString(console.readLine("> "));
+		return input;
+	}
+	
+	private static int convertUserInputToInt(String input, int numberOfOptions) throws IllegalArgumentException{
+		if (input.equals("q")){
+			return -1;
+		}
 		int selection = Integer.parseInt(input);
 		if (selection < 1 || selection > numberOfOptions ){
 			throw new IllegalArgumentException();
@@ -112,23 +118,6 @@ public class AcademyAwardsSearch {
 		return selection;
 	}
 	
-//	private static int getUserInput(int numberOfOptions){
-//		Console console = System.console();
-//		String input = parseString(console.readLine("> "));
-//		int selection = 0;
-//		if (input.equals("q")){
-//			quit();
-//		}
-//		try{
-//			selection = Integer.parseInt(input);
-//			if (selection < 1 || selection > numberOfOptions ){
-//				throw new IllegalArgumentException();
-//			} 
-//		} catch (IllegalArgumentException e){
-//			displayInvalidInputError(numberOfOptions);
-//		}
-//		return selection;
-//	}
 	
 	private static void displayInvalidInputError(int numberOfOptions){
 		String options = "";
