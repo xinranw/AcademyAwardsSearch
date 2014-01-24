@@ -41,12 +41,11 @@ public class AcademyAwardsSearch {
 				System.out.println("Welcome to the Oscars database!\n");
 				displayHomeScreen();
 				inputString = getUserInput();
-				try{
+				if (inputString.equals("q")){
+					quit();
+				} else {
 					userSelection = convertUserInputToInt(inputString, 3);
 					switch (userSelection) {
-						case -1:
-							quit();
-							break;
 			            case 1:  
 			                break;
 			            case 2:  
@@ -54,13 +53,10 @@ public class AcademyAwardsSearch {
 			            case 3:  
 			            	break;
 			            default:
-			            	displayInvalidInputError(3);
+			            	System.out.println("Error: unexpected input: " + userSelection + ".");
 			            	break;
 					}
-				} catch (IllegalArgumentException e){
-					displayInvalidInputError(3);
 				}
-				
 			}
 		} catch (IOException e) {
 			System.out.println("Error - data file could not opened. ");
@@ -106,17 +102,19 @@ public class AcademyAwardsSearch {
 		return input;
 	}
 	
-	private static int convertUserInputToInt(String input, int numberOfOptions) throws IllegalArgumentException{
-		if (input.equals("q")){
-			return -1;
+	private static int convertUserInputToInt(String input, int numberOfOptions){
+		int selection = 0;
+		try{
+			selection = Integer.parseInt(input);
+			if (selection < 1 || selection > numberOfOptions){
+				throw new IllegalArgumentException();
+			}
+		} catch (IllegalArgumentException e){
+			displayInvalidInputError(numberOfOptions);
+			selection = 0;
 		}
-		int selection = Integer.parseInt(input);
-		if (selection < 1 || selection > numberOfOptions ){
-			throw new IllegalArgumentException();
-		} 
 		return selection;
 	}
-	
 	
 	private static void displayInvalidInputError(int numberOfOptions){
 		String options = "";

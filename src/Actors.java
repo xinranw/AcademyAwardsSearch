@@ -17,7 +17,7 @@ public class Actors {
 		return nominees;
 	}
 	
-	public void addActorNomineePair(Nominee nominee){
+	public void addActorNominee(Nominee nominee){
 		String name = nominee.getName();
 		if (!actors.containsKey(name)){
 			actors.put(name, new HashSet<Nominee>());
