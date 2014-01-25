@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class AcademyAwardsSearch {
@@ -37,20 +36,25 @@ public class AcademyAwardsSearch {
 			String inputString;
 			int userSelection = 0;
 			
+			System.out.println("Welcome to the Oscars database!\n");
+			
 			while(!quit){
-				System.out.println("Welcome to the Oscars database!\n");
+				System.out.println("Please make your selection:");
 				displayHomeScreen();
-				inputString = getUserInput();
+				inputString = getUserInput("> ");
 				if (inputString.equals("q")){
 					quit();
 				} else {
-					userSelection = convertUserInputToInt(inputString, 3);
+					userSelection = convertStringToInt(inputString);
 					switch (userSelection) {
-			            case 1:  
+			            case 1:
+			            	searchForBestPictureWinnerByYear();
 			                break;
 			            case 2:  
+			            	searchForBestPictureNomineesByYear();
 		                    break;
 			            case 3:  
+			            	searchForActorNominationsByName();
 			            	break;
 			            default:
 			            	System.out.println("Error: unexpected input: " + userSelection + ".");
@@ -96,34 +100,60 @@ public class AcademyAwardsSearch {
 		return parsedString;
 	}
 	
-	private static String getUserInput(){
+	private static String getUserInput(String prompt){
 		Console console = System.console();
-		String input = parseString(console.readLine("> "));
+		String input = parseString(console.readLine(prompt));
 		return input;
 	}
 	
-	private static int convertUserInputToInt(String input, int numberOfOptions){
-		int selection = 0;
+	private static int convertStringToInt(String str){
+		int number = 0;
 		try{
-			selection = Integer.parseInt(input);
-			if (selection < 1 || selection > numberOfOptions){
-				throw new IllegalArgumentException();
-			}
+			number = Integer.parseInt(str);
+//			if (selection < 1 || selection > numberOfOptions){
+//				throw new IllegalArgumentException();
+//			}
 		} catch (IllegalArgumentException e){
-			displayInvalidInputError(numberOfOptions);
-			selection = 0;
+			System.out.println("That is not a valid selection.");
+//			selection = 0;
 		}
-		return selection;
+		return number;
 	}
 	
-	private static void displayInvalidInputError(int numberOfOptions){
-		String options = "";
-		for (int i = 1; i <= numberOfOptions; i++){
-			options = options.concat(i + ", ");
+	private static void searchForBestPictureNomineesByYear(){
+		String yearString = getUserInput("Please enter the year: ");
+		int year = convertStringToInt(yearString);
+    	Nominee[] nominees = awardsDatabase.searchForBestPictureNomineesByYear(year);
+    	if (nominees.length == 0){
+			System.out.println("No results found for year " + year);
+			searchForBestPictureNomineesByYear();
 		}
-		options = options.concat("or Q");
-		System.out.println("Invalid input. Valid inputs are: " + options);
-		System.out.println("Please try again.");
+    	for (Nominee n : nominees){
+    		System.out.println(n.getName());
+    	}
+	}
+	
+	private static void searchForBestPictureWinnerByYear(){
+		String yearString = getUserInput("Please enter the year: ");
+		int year = convertStringToInt(yearString);
+		Nominee winner = awardsDatabase.searchForBestPictureWinnerByYear(year);
+		if (winner == null){
+			System.out.println("No nominees for year " + year);
+			searchForBestPictureWinnerByYear();
+		}
+		System.out.println(winner.getName());
+	}
+	
+	private static void searchForActorNominationsByName(){
+		String name = getUserInput("Please enter all or part of the person's name: ");
+    	Nominee[] results = awardsDatabase.searchForActorNominationsByName(name);
+    	if (results.length == 0){
+			System.out.println("No results found for " + name);
+		} else {
+			for (Nominee n : results){
+				System.out.println(n.getName() + " was nominated for " + n.getAward() +" in " + n.getYear());
+			}
+		}
 	}
 	
 	private static void quit(){

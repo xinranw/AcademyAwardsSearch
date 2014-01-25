@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Actors {
 	
@@ -25,7 +26,7 @@ public class Actors {
 		actors.get(name).add(nominee);
 	}
 
-	public String[] getAllActorNames(){
-		return actors.keySet().toArray(new String[0]);
+	public Set<String> getAllActorNames(){
+		return actors.keySet();
 	}
 }

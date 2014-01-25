@@ -4,13 +4,37 @@ public class Nominee {
 	private String name;
 	private boolean won;
 	
+	/**
+	 * @category Constructor
+	 * @param year
+	 * @param award
+	 * @param name
+	 * @param won
+	 */
 	public Nominee(int year, String award, String name, boolean won){
 		this.year = year;
 		this.award = award;
 		this.name = name;
 		this.won = won;
 	}	
+
+	/**
+	 * @category 
+	 */
+	public boolean isNomineeForActor(){
+		if (award.contains("Actor") || award.contains("Actress")){
+			return true;
+		}
+		return false;
+	}  
 	
+	public boolean isAwardForBestPicture(){
+		return award.contains("Best Picture");
+	}
+	
+	/**
+	 * @category Getters
+	 */
 	public int getYear(){
 		return year;
 	}

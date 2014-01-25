@@ -1,6 +1,4 @@
 import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -9,7 +7,7 @@ public class ActorsTest {
 	@Test
 	public final void testNewActorsObjectIsEmpty() {
 		Actors actors = new Actors();
-		assertEquals("Newly initialized Actors should be empty", actors.getAllActorNames().length, 0);
+		assertEquals("Newly initialized Actors should be empty", actors.getAllActorNames().size(), 0);
 	}
 	
 	@Test
@@ -25,11 +23,11 @@ public class ActorsTest {
 		Nominee testNominee2 = new Nominee(1950, "Actor", "Actor2", false);
 		Nominee testNominee3 = new Nominee(1960, "Actor", "Actor1", false);
 		actors.addActorNominee(testNominee1);
-		assertEquals("Add actor-nominee once", actors.getAllActorNames().length, 1);
+		assertEquals("Add actor-nominee once", actors.getAllActorNames().size(), 1);
 		actors.addActorNominee(testNominee1);
-		assertEquals("Add same actor-nominee twice", actors.getAllActorNames().length, 1);
+		assertEquals("Add same actor-nominee twice", actors.getAllActorNames().size(), 1);
 		actors.addActorNominee(testNominee2);
-		assertEquals("Add new actor-nominee", actors.getAllActorNames().length, 2);
+		assertEquals("Add new actor-nominee", actors.getAllActorNames().size(), 2);
 		actors.addActorNominee(testNominee3);
 		assertEquals("Add new actor-nominee with same name", actors.getNomineesForActor(testNominee3.getName()).length, 2);
 	}

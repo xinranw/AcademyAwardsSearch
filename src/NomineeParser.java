@@ -17,9 +17,9 @@ public class NomineeParser {
         if (nomineeInfo.length != 4){
         	return false;
         }
-        if (!isAwardForActor(nomineeInfo[1]) && !isAwardForBestPicture(nomineeInfo[1])){
-        	return false;
-        }
+//        if (!isAwardForActor(nomineeInfo[1]) && !isAwardForBestPicture(nomineeInfo[1])){
+//        	return false;
+//        }
 		return true;
 	}
 
