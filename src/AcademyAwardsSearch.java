@@ -2,9 +2,10 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-
 
 public class AcademyAwardsSearch {
 	private static File logFile;
@@ -27,7 +28,6 @@ public class AcademyAwardsSearch {
 			return;
 		}
 		
-		
 		try {
 			String dataFileName = args[0];
 			Nominee[] nominees = createNomineesFromDataFile(dataFileName);
@@ -47,6 +47,8 @@ public class AcademyAwardsSearch {
 				} else {
 					userSelection = convertStringToInt(inputString);
 					switch (userSelection) {
+						case 0:
+							break;
 			            case 1:
 			            	searchForBestPictureWinnerByYear();
 			                break;
@@ -57,7 +59,7 @@ public class AcademyAwardsSearch {
 			            	searchForActorNominationsByName();
 			            	break;
 			            default:
-			            	System.out.println("Error: unexpected input: " + userSelection + ".");
+			            	System.out.println("Error: unexpected input: " + userSelection + ".\n");
 			            	break;
 					}
 				}
@@ -110,12 +112,8 @@ public class AcademyAwardsSearch {
 		int number = 0;
 		try{
 			number = Integer.parseInt(str);
-//			if (selection < 1 || selection > numberOfOptions){
-//				throw new IllegalArgumentException();
-//			}
 		} catch (IllegalArgumentException e){
-			System.out.println("That is not a valid selection.");
-//			selection = 0;
+			System.out.println("That is not a valid selection.\n");
 		}
 		return number;
 	}
@@ -125,12 +123,13 @@ public class AcademyAwardsSearch {
 		int year = convertStringToInt(yearString);
     	Nominee[] nominees = awardsDatabase.searchForBestPictureNomineesByYear(year);
     	if (nominees.length == 0){
-			System.out.println("No results found for year " + year);
+			System.out.println("No results found for year " + year + "\n");
 			searchForBestPictureNomineesByYear();
 		}
     	for (Nominee n : nominees){
     		System.out.println(n.getName());
     	}
+    	System.out.println("");
 	}
 	
 	private static void searchForBestPictureWinnerByYear(){
@@ -138,22 +137,31 @@ public class AcademyAwardsSearch {
 		int year = convertStringToInt(yearString);
 		Nominee winner = awardsDatabase.searchForBestPictureWinnerByYear(year);
 		if (winner == null){
-			System.out.println("No nominees for year " + year);
+			System.out.println("No nominees for year " + year + "\n");
 			searchForBestPictureWinnerByYear();
 		}
 		System.out.println(winner.getName());
+		System.out.println("");
 	}
 	
 	private static void searchForActorNominationsByName(){
 		String name = getUserInput("Please enter all or part of the person's name: ");
     	Nominee[] results = awardsDatabase.searchForActorNominationsByName(name);
     	if (results.length == 0){
-			System.out.println("No results found for " + name);
+			System.out.println("No results found for " + name + "\n");
+			searchForActorNominationsByName();
 		} else {
 			for (Nominee n : results){
 				System.out.println(n.getName() + " was nominated for " + n.getAward() +" in " + n.getYear());
 			}
 		}
+    	System.out.println("");
+	}
+	
+	private static void writeToLogFile(String message,File file) throws IOException{
+		PrintWriter writer = new PrintWriter(new FileWriter(file, true));
+		writer.println("User searched for: " + message + " at time=" + System.currentTimeMillis());
+		writer.close();
 	}
 	
 	private static void quit(){
