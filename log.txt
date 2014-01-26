@@ -1,0 +1,6 @@
+User searched for: 2 at time=1390716147774
+User searched for: 1999 at time=1390716150415
+User searched for: q at time=1390716152623
+User typed '1' at time=1390716306951
+User typed '1950' at time=1390716308486
+User typed 'q' at time=1390716310500
