@@ -4,8 +4,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class AcademyAwards {
-	Map<String, Set<Nominee>> actorDatabase;
-	Map<Integer, Set<Nominee>> filmDatabase;
+	/**
+	 * Stores nominees as actors or films
+	 * actorDatabase matches name to nominations
+	 * filmDatabse matches year to Best Picture nominations
+	 */
+	private Map<String, Set<Nominee>> actorDatabase;
+	private Map<Integer, Set<Nominee>> filmDatabase;
 	
 	public AcademyAwards(){
 		actorDatabase = new HashMap<String, Set<Nominee>>();
@@ -15,9 +20,9 @@ public class AcademyAwards {
 	public void addNominees(Nominee[] nominees){
 		for (Nominee n: nominees){
 			if (n.isNomineeForActor()){
-				addActorNominee(n);
-			} else if (n.getAward().contains("Best Picture")){
-				addFilmNominee(n);
+				addActorNomineeToDatabase(n);
+			} else if (n.isAwardForBestPicture()){
+				addFilmNomineeToDatabase(n);
 			} else {
 			}
 		}
@@ -47,7 +52,10 @@ public class AcademyAwards {
 		}
 		return filmDatabase.get(year).toArray(new Nominee[0]);
 	}
-	
+	/**
+	 * Gets all actor names. Check whether each name contains the search string.
+	 * Return nominations of matched actors
+	 */
 	public Nominee[] searchForActorNominationsByName(String actorName){
 		Set<String> actorNames = actorDatabase.keySet(); 
 		Set<Nominee> results = new HashSet<Nominee>();
@@ -59,7 +67,7 @@ public class AcademyAwards {
 		return results.toArray(new Nominee[0]);
 	}
 	
-	private void addActorNominee(Nominee nominee){
+	private void addActorNomineeToDatabase(Nominee nominee){
 		String name = nominee.getName();
 		if (!actorDatabase.containsKey(name)){
 			actorDatabase.put(name, new HashSet<Nominee>());
@@ -67,7 +75,7 @@ public class AcademyAwards {
 		actorDatabase.get(name).add(nominee);
 	}
 	
-	private void addFilmNominee(Nominee nominee){
+	private void addFilmNomineeToDatabase(Nominee nominee){
 		int year = nominee.getYear();
 		if (!filmDatabase.containsKey(year)){
 			filmDatabase.put(year, new HashSet<Nominee>());

@@ -6,10 +6,6 @@ public class Nominee {
 	
 	/**
 	 * @category Constructor
-	 * @param year
-	 * @param award
-	 * @param name
-	 * @param won
 	 */
 	public Nominee(int year, String award, String name, boolean won){
 		this.year = year;
@@ -18,9 +14,6 @@ public class Nominee {
 		this.won = won;
 	}	
 
-	/**
-	 * @category 
-	 */
 	public boolean isNomineeForActor(){
 		if (award.contains("Actor") || award.contains("Actress")){
 			return true;
@@ -32,9 +25,6 @@ public class Nominee {
 		return award.contains("Best Picture");
 	}
 	
-	/**
-	 * @category Getters
-	 */
 	public int getYear(){
 		return year;
 	}
@@ -50,7 +40,7 @@ public class Nominee {
 	public boolean getResult(){
 		return won;
 	}
-
+	
 	public String toString(){
 		String output = "";
 		output = output.concat("Year: " + year + ", Award: " + award + ", Name: " + name);

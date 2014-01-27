@@ -10,52 +10,49 @@ import java.util.ArrayList;
 public class AcademyAwardsSearch {
 	private static File logFile;
 	private static AcademyAwards awardsDatabase;
-	private static final String[] HOME_SCREEN_CHOICES = new String[] {
-			"1: Search for best picture award winner by year",
-			"2: Search for best picture award nominees by year",
-			"3: Search for actor/actress nominations by name", "Q: Quit" };
 
 	public static final void main(String[] args) {
 		if (args.length <= 0 || args[0].equals("")) {
 			System.out
 					.println("Error - please enter the names of the data file and the log file.");
 			System.out
-					.println("usage: java -jar AcademyAwardsSearch.jar <data file> <log file>");
+					.println("usage: java AcademyAwardsSearch <data file> <log file>");
 			return;
 		} else if (args.length == 1) {
 			System.out.println("Error - not enough inputs.");
 			System.out
-					.println("usage: java -jar AcademyAwardsSearch.jar <data file> <log file>");
+					.println("usage: java AcademyAwardsSearch <data file> <log file>");
 			return;
 		} else if (args.length > 2) {
 			System.out.println("Error - too many inputs.");
 			System.out
-					.println("usage: java -jar AcademyAwardsSearch.jar <data file> <log file>");
+					.println("usage: java AcademyAwardsSearch <data file> <log file>");
 			return;
 		}
-		
+
 		try {
+			// Set up nominees database from the data file
 			String dataFileName = args[0];
-			logFile = new File(args[1]);
 			Nominee[] nominees = createNomineesFromDataFile(dataFileName);
 			awardsDatabase = new AcademyAwards();
 			awardsDatabase.addNominees(nominees);
-			checkLogFile();
-			String inputString;
-			int userSelection = 0;
 
+			// Set up log file
+			logFile = new File(args[1]);
+			checkLogFileAccessibility();
+
+			// Display prompts, get user input, and search for nominations
 			System.out.println("Welcome to the Oscars database!\n");
-
 			while (true) {
-				System.out.println("Please make your selection:");
-				displayHomeScreen();
-				inputString = getUserInput("> ");
+				displayHomeScreenSelections();
+				String inputString = getUserInput("> ");
 				if (inputString.equals("q")) {
 					System.exit(0);
 				} else {
-					userSelection = convertStringToInt(inputString);
+					int userSelection = convertStringToInt(inputString);
 					switch (userSelection) {
 					case 0:
+						System.out.println("That is not a valid selection.\n");
 						break;
 					case 1:
 						searchForBestPictureWinnerByYear();
@@ -83,25 +80,23 @@ public class AcademyAwardsSearch {
 
 	private static Nominee[] createNomineesFromDataFile(String dataFileName)
 			throws IOException {
-		BufferedReader reader = null;
 		File file = new File(dataFileName);
-		reader = new BufferedReader(new FileReader(file));
-		String line;
-		NomineeParser nomineeParser = new NomineeParser();
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 		ArrayList<Nominee> nominees = new ArrayList<Nominee>();
 
+		String line = "";
 		while ((line = reader.readLine()) != null) {
 			if (!NomineeParser.isValidNominee(line)) {
 				continue;
 			}
-			nominees.add(nomineeParser.extractDataAndOutputNominee(line));
+			nominees.add(NomineeParser.parseDataAndOutputNominee(line));
 		}
 		reader.close();
 		return nominees.toArray(new Nominee[0]);
 	}
 
 	private static void writeToLogFile(String message) {
-		checkLogFile();
+		checkLogFileAccessibility();
 		try {
 			PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
 			writer.println("User typed '" + message + "' at time="
@@ -114,7 +109,9 @@ public class AcademyAwardsSearch {
 		}
 	}
 
-	private static void checkLogFile() {
+	// Check whether log file has been initialized, exists, and is writeable.
+	// If log file is not accessible, exit the program.
+	private static void checkLogFileAccessibility() {
 		if (logFile == null) {
 			System.out.println("No log file on record. Program exiting");
 			System.exit(1);
@@ -129,24 +126,20 @@ public class AcademyAwardsSearch {
 		}
 	}
 
-	private static void displayHomeScreen() {
-		for (int i = 0; i < HOME_SCREEN_CHOICES.length; i++) {
-			System.out.println(HOME_SCREEN_CHOICES[i]);
-		}
-	}
-
-	private static String parseString(String str) {
-		String parsedString = str;
-		parsedString = parsedString.toLowerCase();
-		parsedString = parsedString.trim();
-		return parsedString;
+	private static void displayHomeScreenSelections() {
+		System.out.println("Please make your selection:");
+		System.out.println("1: Search for best picture award winner by year\n"
+				+ "2: Search for best picture award nominees by year\n"
+				+ "3: Search for actor/actress nominations by name\n"
+				+ "Q: Quit");
 	}
 
 	private static String getUserInput(String prompt) {
 		Console console = System.console();
-		String input = parseString(console.readLine(prompt));
-		writeToLogFile(input);
-		return input;
+		String input = console.readLine(prompt);
+		String parsedString = input.toLowerCase().trim();
+		writeToLogFile(parsedString);
+		return parsedString;
 	}
 
 	private static int convertStringToInt(String str) {
@@ -154,7 +147,7 @@ public class AcademyAwardsSearch {
 		try {
 			number = Integer.parseInt(str);
 		} catch (IllegalArgumentException e) {
-			System.out.println("That is not a valid selection.\n");
+			// Not a valid number. Error message generated in main()
 		}
 		return number;
 	}
@@ -193,11 +186,10 @@ public class AcademyAwardsSearch {
 		if (results.length == 0) {
 			System.out.println("No results found for " + name + "\n");
 			searchForActorNominationsByName();
-		} else {
-			for (Nominee n : results) {
-				System.out.println(n.getName() + " was nominated for "
-						+ n.getAward() + " in " + n.getYear());
-			}
+		}
+		for (Nominee n : results) {
+			System.out.println(n.getName() + " was nominated for "
+					+ n.getAward() + " in " + n.getYear());
 		}
 		System.out.println("");
 	}

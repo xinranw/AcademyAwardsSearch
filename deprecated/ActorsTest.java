@@ -1,4 +1,7 @@
+package deprecated;
 import static org.junit.Assert.*;
+import Nominee;
+
 import org.junit.Test;
 
 
