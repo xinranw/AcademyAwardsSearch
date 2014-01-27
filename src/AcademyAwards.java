@@ -3,6 +3,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Acts a database to store information about nominees.
+ * 
+ * @author Xinran Wang
+ *
+ */
+
 public class AcademyAwards {
 	/**
 	 * Stores nominees as actors or films

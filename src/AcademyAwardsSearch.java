@@ -7,6 +7,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+
+/**
+ * Creates a database of Academy Award nominees as specified by the data file. 
+ * Provides functionality for searching for
+ * 		Best Picture Winners by year
+ * 		Best Picture nominees by year
+ * 		Best Actor/Supporting Actor nominations by name  
+ * 
+ * All user interactions are logged to the specified log file.
+ * 
+ * @author Xinran Wang
+ *
+ */
 public class AcademyAwardsSearch {
 	private static File logFile;
 	private static AcademyAwards awardsDatabase;
@@ -49,6 +62,7 @@ public class AcademyAwardsSearch {
 				if (inputString.equals("q")) {
 					System.exit(0);
 				} else {
+					// Get user input and call appropriate function
 					int userSelection = convertStringToInt(inputString);
 					switch (userSelection) {
 					case 0:
@@ -78,6 +92,7 @@ public class AcademyAwardsSearch {
 		}
 	}
 
+	// Parse through each line of the data file. Converts string data to Nominees
 	private static Nominee[] createNomineesFromDataFile(String dataFileName)
 			throws IOException {
 		File file = new File(dataFileName);

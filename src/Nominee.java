@@ -1,12 +1,14 @@
+/**
+ * @author Xinran
+ *
+ */
+
 public class Nominee {
 	private int year;
 	private String award;
 	private String name;
 	private boolean won;
 	
-	/**
-	 * @category Constructor
-	 */
 	public Nominee(int year, String award, String name, boolean won){
 		this.year = year;
 		this.award = award;
