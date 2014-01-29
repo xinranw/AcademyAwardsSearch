@@ -26,7 +26,9 @@ public class AcademyAwards {
 	/**
 	 * Adds the input array of nominees into the actorDatabase and filmDatabase
 	 * fields;
+	 * 
 	 * @param nominees
+	 *            - array of Nominee objects to be added
 	 */
 	public void addAllNominees(Nominee[] nominees) {
 		for (Nominee n : nominees) {
@@ -41,8 +43,9 @@ public class AcademyAwards {
 
 	/**
 	 * Performs a search for the Best Picture winner of the input year.
+	 * 
 	 * @param year
-	 * @return Nominee
+	 * @return Nominee - Best Picture winner of the input year
 	 */
 	public Nominee searchForBestPictureWinnerByYear(int year) {
 		if (!filmDatabase.containsKey(year)) {
@@ -64,8 +67,9 @@ public class AcademyAwards {
 
 	/**
 	 * Performs a search for the Best Picture nominees of the input year.
+	 * 
 	 * @param year
-	 * @return Nominee[]
+	 * @return Nominee[] - array of Best Picture nominees of the input year
 	 */
 	public Nominee[] searchForBestPictureNomineesByYear(int year) {
 		if (!filmDatabase.containsKey(year)) {
@@ -76,17 +80,22 @@ public class AcademyAwards {
 
 	/**
 	 * Gets all actor names. Check whether each name contains the search string.
-	 * Return nominations of matched actors
-	 * If the input is empty, return an empty array.
+	 * Return nominations of matched actors If the input is empty, return an
+	 * empty array.
+	 * 
+	 * @param nameString
+	 *            - string to search for in actors' names
+	 * @return array of Nominee objects that were nominated for Best
+	 *         Actor/Actress, and whose names contain the input string
 	 */
-	public Nominee[] searchForActorNominationsByName(String actorName) {
-		if (actorName.equals("")){
+	public Nominee[] searchForActorNominationsByName(String nameString) {
+		if (nameString.equals("")) {
 			return new Nominee[0];
 		}
 		Set<String> actorNames = actorDatabase.keySet();
 		Set<Nominee> results = new HashSet<Nominee>();
 		for (String name : actorNames) {
-			if (name.contains(actorName)) {
+			if (name.contains(nameString)) {
 				results.addAll(actorDatabase.get(name));
 			}
 		}
@@ -95,6 +104,7 @@ public class AcademyAwards {
 
 	/**
 	 * Adds a Nominee into actorDatabase, using the nominee's name as key
+	 * 
 	 * @param nominee
 	 */
 	private void addActorNomineeToDatabase(Nominee nominee) {
@@ -107,6 +117,7 @@ public class AcademyAwards {
 
 	/**
 	 * Adds a Nominee into filmDatabase, using the nominee's year as key
+	 * 
 	 * @param nominee
 	 */
 	private void addFilmNomineeToDatabase(Nominee nominee) {

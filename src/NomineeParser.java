@@ -9,6 +9,10 @@ public class NomineeParser {
 
 	/**
 	 * Converts a line of data into a Nominee object
+	 * 
+	 * @param dataString
+	 *            - string containing data for creating a nominee
+	 * @return Nominee object created form the dataString
 	 */
 	public static Nominee parseStringIntoNominee(String dataString) {
 		String[] nomineeInfo = dataString.split(",");
@@ -20,14 +24,14 @@ public class NomineeParser {
 	}
 
 	/**
-	 * Checks if the given line contains a valid nominee. The input needs to be
-	 * split by commas into exactly 4 substrings.
+	 * Checks if the given string contains a valid nominee. The input needs to
+	 * be split by commas into exactly 4 substrings.
 	 * 
-	 * @param line
-	 * @return boolean
+	 * @param dataString
+	 * @return whether the input dataString contains a valid nominee
 	 */
-	public static boolean isValidNominee(String line) {
-		String[] nomineeInfo = line.split(",");
+	public static boolean isValidNominee(String dataString) {
+		String[] nomineeInfo = dataString.split(",");
 		if (nomineeInfo.length != 4) {
 			return false;
 		}

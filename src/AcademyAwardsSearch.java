@@ -93,7 +93,8 @@ public class AcademyAwardsSearch {
 	 * Nominees
 	 * 
 	 * @param dataFileName
-	 * @return Nominee[]
+	 * @return Nominee[] - array of Nominee objects created from the input data
+	 *         file
 	 * @throws IOException
 	 */
 	private static Nominee[] createNomineesFromDataFile(String dataFileName)
@@ -116,7 +117,7 @@ public class AcademyAwardsSearch {
 	/**
 	 * Writes a string to the log file
 	 * 
-	 * @param message
+	 * @param message - string to be written to the log file
 	 */
 	private static void writeToLogFile(String message) {
 		checkLogFileAccessibility();
@@ -247,11 +248,11 @@ public class AcademyAwardsSearch {
 
 	/**
 	 * Performs a search in AcademyAwards for all movies for which an actor has
-	 * been nominated.
-	 * Asks for another input if the current query returns no results.
+	 * been nominated. Asks for another input if the current query returns no
+	 * results.
 	 */
 	private static void searchForActorNominationsByName() {
-		while (true){
+		while (true) {
 			String name = getUserInput("Please enter all or part of the person's name: ");
 			Nominee[] results = awardsDatabase
 					.searchForActorNominationsByName(name);
