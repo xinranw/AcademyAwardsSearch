@@ -7,18 +7,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-
 /**
- * Creates a database of Academy Award nominees as specified by the data file. 
- * Provides functionality for searching for
- * 		Best Picture Winners by year
- * 		Best Picture nominees by year
- * 		Best Actor/Supporting Actor nominations by name  
+ * Creates a database of Academy Award nominees as specified by the data file.
+ * Provides functionality for searching for Best Picture Winners by year Best
+ * Picture nominees by year Best Actor/Supporting Actor nominations by name
  * 
  * All user interactions are logged to the specified log file.
  * 
  * @author Xinran Wang
- *
+ * 
  */
 public class AcademyAwardsSearch {
 	private static File logFile;
@@ -48,7 +45,7 @@ public class AcademyAwardsSearch {
 			String dataFileName = args[0];
 			Nominee[] nominees = createNomineesFromDataFile(dataFileName);
 			awardsDatabase = new AcademyAwards();
-			awardsDatabase.addNominees(nominees);
+			awardsDatabase.addAllNominees(nominees);
 
 			// Set up log file
 			logFile = new File(args[1]);
@@ -57,31 +54,30 @@ public class AcademyAwardsSearch {
 			// Display prompts, get user input, and search for nominations
 			System.out.println("Welcome to the Oscars database!\n");
 			while (true) {
-				displayHomeScreenSelections();
+				displayHomeScreenOptions();
 				String inputString = getUserInput("> ");
 				if (inputString.equals("q")) {
 					System.exit(0);
-				} else {
-					// Get user input and call appropriate function
-					int userSelection = convertStringToInt(inputString);
-					switch (userSelection) {
-					case 0:
-						System.out.println("That is not a valid selection.\n");
-						break;
-					case 1:
-						searchForBestPictureWinnerByYear();
-						break;
-					case 2:
-						searchForBestPictureNomineesByYear();
-						break;
-					case 3:
-						searchForActorNominationsByName();
-						break;
-					default:
-						System.out.println("Error: unexpected input: "
-								+ userSelection + ".\n");
-						break;
-					}
+				}
+				// Get user input and call appropriate function
+				Integer userSelection = convertStringToInt(inputString);
+				if (userSelection == null) {
+					System.out.println("That is not a valid selection.\n");
+					continue;
+				}
+				switch (userSelection.intValue()) {
+				case 1:
+					searchForBestPictureWinnerByYear();
+					break;
+				case 2:
+					searchForBestPictureNomineesByYear();
+					break;
+				case 3:
+					searchForActorNominationsByName();
+					break;
+				default:
+					System.out.println("That is not a valid selection.\n");
+					break;
 				}
 			}
 		} catch (IOException e) {
@@ -92,7 +88,14 @@ public class AcademyAwardsSearch {
 		}
 	}
 
-	// Parse through each line of the data file. Converts string data to Nominees
+	/**
+	 * Parse through each line of a given data file. Converts string data to
+	 * Nominees
+	 * 
+	 * @param dataFileName
+	 * @return Nominee[]
+	 * @throws IOException
+	 */
 	private static Nominee[] createNomineesFromDataFile(String dataFileName)
 			throws IOException {
 		File file = new File(dataFileName);
@@ -104,12 +107,17 @@ public class AcademyAwardsSearch {
 			if (!NomineeParser.isValidNominee(line)) {
 				continue;
 			}
-			nominees.add(NomineeParser.parseDataAndOutputNominee(line));
+			nominees.add(NomineeParser.parseStringIntoNominee(line));
 		}
 		reader.close();
 		return nominees.toArray(new Nominee[0]);
 	}
 
+	/**
+	 * Writes a string to the log file
+	 * 
+	 * @param message
+	 */
 	private static void writeToLogFile(String message) {
 		checkLogFileAccessibility();
 		try {
@@ -124,8 +132,10 @@ public class AcademyAwardsSearch {
 		}
 	}
 
-	// Check whether log file has been initialized, exists, and is writeable.
-	// If log file is not accessible, exit the program.
+	/**
+	 * Check whether log file has been initialized, exists, and is writeable. If
+	 * log file is not accessible, exit the program.
+	 */
 	private static void checkLogFileAccessibility() {
 		if (logFile == null) {
 			System.out.println("No log file on record. Program exiting");
@@ -141,7 +151,10 @@ public class AcademyAwardsSearch {
 		}
 	}
 
-	private static void displayHomeScreenSelections() {
+	/**
+	 * Display the main selection options
+	 */
+	private static void displayHomeScreenOptions() {
 		System.out.println("Please make your selection:");
 		System.out.println("1: Search for best picture award winner by year\n"
 				+ "2: Search for best picture award nominees by year\n"
@@ -149,6 +162,12 @@ public class AcademyAwardsSearch {
 				+ "Q: Quit");
 	}
 
+	/**
+	 * Displays a message to the user and gets his response from console
+	 * 
+	 * @param prompt
+	 * @return String
+	 */
 	private static String getUserInput(String prompt) {
 		Console console = System.console();
 		String input = console.readLine(prompt);
@@ -157,55 +176,96 @@ public class AcademyAwardsSearch {
 		return parsedString;
 	}
 
-	private static int convertStringToInt(String str) {
-		int number = 0;
+	/**
+	 * Parses a string to an Integer object
+	 * 
+	 * @param str
+	 * @return Integer
+	 */
+	private static Integer convertStringToInt(String str) {
+		Integer number = null;
+		// Check if the input is a number
 		try {
 			number = Integer.parseInt(str);
 		} catch (IllegalArgumentException e) {
-			// Not a valid number. Error message generated in main()
+			return null;
 		}
 		return number;
 	}
 
+	/**
+	 * Performs a search in AcademyAwards for Best Picture nominees by year.
+	 * Repeatedly prompts the user for a year if the input is not valid.
+	 */
 	private static void searchForBestPictureNomineesByYear() {
-		String yearString = getUserInput("Please enter the year: ");
-		int year = convertStringToInt(yearString);
-		Nominee[] nominees = awardsDatabase
-				.searchForBestPictureNomineesByYear(year);
-		if (nominees.length == 0) {
-			System.out.println("No results found for year " + year + "\n");
-			searchForBestPictureNomineesByYear();
+		while (true) {
+			String yearString = getUserInput("Please enter the year: ");
+			Integer year = convertStringToInt(yearString);
+			if (year == null) {
+				System.out.println("That is not a valid input.\n");
+				continue;
+			}
+			Nominee[] nominees = awardsDatabase
+					.searchForBestPictureNomineesByYear(year);
+			if (nominees.length == 0) {
+				System.out.println("No results found for year " + year + "\n");
+				continue;
+			}
+			for (Nominee n : nominees) {
+				System.out.println(n.getName());
+			}
+			System.out.println("");
+			break;
 		}
-		for (Nominee n : nominees) {
-			System.out.println(n.getName());
-		}
-		System.out.println("");
+		return;
 	}
 
+	/**
+	 * Performs a search in AcademyAwards for the Best Picture winner by year.
+	 * Repeatedly prompts the user for a year if the input is not valid.
+	 */
 	private static void searchForBestPictureWinnerByYear() {
-		String yearString = getUserInput("Please enter the year: ");
-		int year = convertStringToInt(yearString);
-		Nominee winner = awardsDatabase.searchForBestPictureWinnerByYear(year);
-		if (winner == null) {
-			System.out.println("No nominees for year " + year + "\n");
-			searchForBestPictureWinnerByYear();
+		while (true) {
+			String yearString = getUserInput("Please enter the year: ");
+			Integer year = convertStringToInt(yearString);
+			if (year == null) {
+				System.out.println("That is not a valid input.\n");
+				continue;
+			}
+			Nominee winner = awardsDatabase
+					.searchForBestPictureWinnerByYear(year);
+			if (winner == null) {
+				System.out.println("No nominees for year " + year + "\n");
+				continue;
+			}
+			System.out.println(winner.getName());
+			System.out.println("");
+			break;
 		}
-		System.out.println(winner.getName());
-		System.out.println("");
+		return;
 	}
 
+	/**
+	 * Performs a search in AcademyAwards for all movies for which an actor has
+	 * been nominated.
+	 * Asks for another input if the current query returns no results.
+	 */
 	private static void searchForActorNominationsByName() {
-		String name = getUserInput("Please enter all or part of the person's name: ");
-		Nominee[] results = awardsDatabase
-				.searchForActorNominationsByName(name);
-		if (results.length == 0) {
-			System.out.println("No results found for " + name + "\n");
-			searchForActorNominationsByName();
+		while (true){
+			String name = getUserInput("Please enter all or part of the person's name: ");
+			Nominee[] results = awardsDatabase
+					.searchForActorNominationsByName(name);
+			if (results.length == 0) {
+				System.out.println("No results found for " + name + "\n");
+				continue;
+			}
+			for (Nominee n : results) {
+				System.out.println(n.getName() + " was nominated for "
+						+ n.getAward() + " in " + n.getYear());
+			}
+			System.out.println("");
+			break;
 		}
-		for (Nominee n : results) {
-			System.out.println(n.getName() + " was nominated for "
-					+ n.getAward() + " in " + n.getYear());
-		}
-		System.out.println("");
+		return;
 	}
 }

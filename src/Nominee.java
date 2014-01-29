@@ -23,7 +23,7 @@ public class Nominee {
 		return false;
 	}  
 	
-	public boolean isAwardForBestPicture(){
+	public boolean isNomineeForBestPicture(){
 		return award.contains("Best Picture");
 	}
 	

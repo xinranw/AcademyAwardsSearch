@@ -1,12 +1,16 @@
+/**
+ * NomineeParser is a library containing methods for parsing strings into
+ * Nominee objects.
+ * 
+ * @author Xinran
+ * 
+ */
 public class NomineeParser {
-
-	public NomineeParser() {
-	}
 
 	/**
 	 * Converts a line of data into a Nominee object
 	 */
-	public static Nominee parseDataAndOutputNominee(String dataString) {
+	public static Nominee parseStringIntoNominee(String dataString) {
 		String[] nomineeInfo = dataString.split(",");
 		int year = extractYear(nomineeInfo[0]);
 		String award = extractAward(nomineeInfo[1]);
@@ -15,6 +19,13 @@ public class NomineeParser {
 		return new Nominee(year, award, name, won);
 	}
 
+	/**
+	 * Checks if the given line contains a valid nominee. The input needs to be
+	 * split by commas into exactly 4 substrings.
+	 * 
+	 * @param line
+	 * @return boolean
+	 */
 	public static boolean isValidNominee(String line) {
 		String[] nomineeInfo = line.split(",");
 		if (nomineeInfo.length != 4) {
