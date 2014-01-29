@@ -77,8 +77,12 @@ public class AcademyAwards {
 	/**
 	 * Gets all actor names. Check whether each name contains the search string.
 	 * Return nominations of matched actors
+	 * If the input is empty, return an empty array.
 	 */
 	public Nominee[] searchForActorNominationsByName(String actorName) {
+		if (actorName.equals("")){
+			return new Nominee[0];
+		}
 		Set<String> actorNames = actorDatabase.keySet();
 		Set<Nominee> results = new HashSet<Nominee>();
 		for (String name : actorNames) {
